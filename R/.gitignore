@@ -37,3 +37,6 @@ vignettes/*.pdf
 # Using ./configure
 config*
 src/Makevars
+autom4te.cache/*
+
+

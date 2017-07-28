@@ -3,12 +3,13 @@
 First [install Arrow](https://github.com/apache/arrow/tree/master/cpp) and
 the dependencies.
 
-Navigate to `arrow/cpp` in the Arrow source, and build the latest release.
+Assuming that you're in the same directory as the arrow source run these
+commands:
 
 ```
-mkdir release
-cd release
-cmake .. -DCMAKE_BUILD_TYPE=Release
+mkdir arrow_release
+cd arrow_release
+cmake ../arrow/cpp -DCMAKE_BUILD_TYPE=Release
 make unittest
 make install
 ```
@@ -16,6 +17,7 @@ make install
 To install Rarrow navigate to the `arrow/R` directory and run:
 
 ```
+autoconf
 ./configure
 R CMD INSTALL .
 ```
