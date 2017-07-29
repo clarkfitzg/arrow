@@ -21,8 +21,12 @@ Status ConvertTableToPandas(
     const std::shared_ptr<Table>& table, int nthreads, PyObject** out);
 ```
 
-Following this, the simplest thing to do is convert an Arrow array into an
-R vector for a couple numeric types.
+Following this, the simplest thing to do is convert between Arrow arrays
+and
+R vectors for a couple numeric types.
+
+Appears that `PushArray` on line 333 in `pandas_to_arrow.h` is doing the
+actual work.
 
 
 ## Feather
@@ -39,3 +43,26 @@ reasonable.
   Hopefully this will enhance parallel and out of core computing.
 - Efficient columnar storage that preserves metadata
 - Learn more C++ / low level details of data storage
+
+## Open C++ Questions
+
+What is the meaning of `const` after a function or method signature in the
+documentation?
+
+```
+const value_type* arrow::NumericArray< TYPE >::raw_data (       )   const
+```
+
+------------------------------------------------------------
+
+Line 294 of `pandas_to_arrow.cc` calls the conversion:
+
+>   // Traditional visitor conversion for non-object arrays
+
+Is there a reference for this? I looked through the `visitor` files source
+and am not sure what's happening.
+
+------------------------------------------------------------
+
+Given an array of doubles in C (no null values), what's the simplest way to make an
+`arrow::Array` object from them?
