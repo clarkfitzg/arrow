@@ -4,3 +4,4 @@ Title: Interface to Apache Arrow
 Version: 0.1
 Date: 2017-07-25
 Author: Clark Fitzgerald
+Imports: methods, RAutoGenRunTime

@@ -1,2 +1,5 @@
-useDynLib(Rarrow, c_l2norm, c_get123)
-export(l2norm, get123)
+useDynLib(Rarrow)
+
+import(RAutoGenRunTime)
+
+exportPattern(".*")

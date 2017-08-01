@@ -39,7 +39,6 @@ SEXP R_double_to_arrow(SEXP x)
     builder.Finish(&array);
 
     // TODO: Pass destructor for array?
-    // A pointer to a shared pointer. Terrible idea?
-    SEXP r_ans = R_createRef(&array, "arrow::array", NULL);
+    SEXP r_ans = R_createRef(&array, "arrow.array", NULL);
     return(r_ans);
 }
