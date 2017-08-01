@@ -9,6 +9,8 @@
 #include <Rdefines.h>
 
 // From Rrawpoppler
+//
+// This stuff will go into a header file
 #define GET_REF(obj, type) \
   (type *) R_ExternalPtrAddr(GET_SLOT(obj, Rf_install("ref")))
 
