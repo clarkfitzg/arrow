@@ -35,7 +35,7 @@ SEXP R_Catalog_getPage(SEXP r_tthis, SEXP r_i)
 
 
 extern "C"
-SEXP double_to_arrow(SEXP x)
+SEXP R_double_to_arrow(SEXP x)
 // Return a pointer to a newly created Arrow array
 {
 
@@ -43,19 +43,18 @@ SEXP double_to_arrow(SEXP x)
     double *xr = REAL(x);
     int n = length(x);
 
-    std::shared_ptr<Int32Array> int32_array = std::static_pointer_cast<Int32Array>(array);
+    // Following "Getting started"
+    arrow::DoubleBuilder builder(arrow::default_memory_pool(), arrow::float64());
 
-    SEXP r_ans = R_createRef(ans, "PagePtr", NULL);
+    for (int i = 0; i < n; ++i) {
+        builder.Append(xr[i]);
+    }
+
+    std::shared_ptr<arrow::Array> array;
+    builder.Finish(&array);
+
+    // TODO: Pass destructor for array?
+    // A pointer to a shared pointer. Terrible idea?
+    SEXP r_ans = R_createRef(&array, "arrow::array", NULL);
     return(r_ans);
-}
-
-
-SEXP arrow_to_double
-
-Status PandasObjectsToArrow(MemoryPool* pool, PyObject* ao, PyObject* mo,
-    const std::shared_ptr<DataType>& type, std::shared_ptr<ChunkedArray>* out) {
-  PandasConverter converter(pool, ao, mo, type);
-  RETURN_NOT_OK(converter.ConvertObjects());
-  *out = std::make_shared<ChunkedArray>(converter.result());
-  return Status::OK();
 }

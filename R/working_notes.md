@@ -65,4 +65,6 @@ and am not sure what's happening.
 ------------------------------------------------------------
 
 Given an array of doubles in C (no null values), what's the simplest way to make an
-`arrow::Array` object from them?
+`arrow::Array` object from them? The `builder.append()` approach as
+described in the [C++ docs](https://arrow.apache.org/docs/cpp/index.html)
+seems more appropriate if we don't know the initial size of the array.
