@@ -1,23 +1,6 @@
 // Convert between an Arrow array and an R vector
 
-#include <arrow/api.h>
-
-#include <R.h>
-#include <Rinternals.h>
-
-
-#include <Rdefines.h>
-
-// From Rrawpoppler
-//
-// This stuff will go into a header file
-#define GET_REF(obj, type) \
-  (type *) R_ExternalPtrAddr(GET_SLOT(obj, Rf_install("ref")))
-
-SEXP createRef(void *ptr, const char * const classname, R_CFinalizer_t fin);
-
-#define R_createRef(a, b, c)  createRef((a), (b), (c))
-
+#include "Rarrow.h"
 
 
 /* Example from Rrawpoppler
