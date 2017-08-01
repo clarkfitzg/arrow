@@ -42,3 +42,9 @@ SEXP R_double_to_arrow(SEXP x)
     SEXP r_ans = R_createRef(&array, "arrow.array", NULL);
     return(r_ans);
 }
+
+
+extern "C"
+SEXP R_arrow_to_double(SEXP x)
+{
+}
