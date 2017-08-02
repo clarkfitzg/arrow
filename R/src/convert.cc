@@ -49,11 +49,12 @@ extern "C"
 SEXP R_arrow_to_double(SEXP x)
 {
     // Follow the pointer in the R object to the C object
-    //Catalog *tthis = GET_REF(r_tthis, Catalog);
     std::shared_ptr<arrow::Array>* array = GET_REF(x, std::shared_ptr<arrow::Array>);
 
     // Following "Getting started"
 	// Cast the Array to its actual type to access its data
+    // Running R through the C debugger this line causes a seg fault:
+    // stop reason = signal SIGSEGV: invalid address (fault address: 0xa)
 	std::shared_ptr<arrow::DoubleArray> arr = std::static_pointer_cast<arrow::DoubleArray>(*array);
 
 	// Get the pointer to the null bitmap.
