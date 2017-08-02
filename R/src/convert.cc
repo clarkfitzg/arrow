@@ -60,7 +60,7 @@ SEXP R_arrow_to_double(SEXP x)
 	//const uint8_t* null_bitmap = int64_array->null_bitmap_data();
 
 	// Get the pointer to the actual data
-	const double* data = arr->raw_data();
+	const double* data = arr->raw_values();
 
     // TODO: Call arrow method
     int n = 3;
