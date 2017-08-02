@@ -7,6 +7,7 @@
 
 // From Rrawpoppler
 //
+// Returns a pointer to some type
 #define GET_REF(obj, type) \
   (type *) R_ExternalPtrAddr(GET_SLOT(obj, Rf_install("ref")))
 
