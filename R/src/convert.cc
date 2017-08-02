@@ -44,7 +44,35 @@ SEXP R_double_to_arrow(SEXP x)
 }
 
 
+// TODO: This is currently totally broken.
 extern "C"
 SEXP R_arrow_to_double(SEXP x)
 {
+    // Follow the pointer in the R object to the C object
+    std::shared_ptr<arrow::Array> *array = GET_REF(x, std::shared_ptr<arrow::Array>);
+
+    // Following "Getting started"
+	// Cast the Array to its actual type to access its data
+	std::shared_ptr<DoubleArray> arr = std::static_pointer_cast<DoubleArray>(array);
+
+	// Get the pointer to the null bitmap.
+	//const uint8_t* null_bitmap = int64_array->null_bitmap_data();
+
+	// Get the pointer to the actual data
+	const double* data = arr->raw_data();
+
+    // TODO: Call arrow method
+    int n = 3;
+
+    SEXP out = PROTECT(allocVector(REALSXP, n));
+
+    // C pointers to the actual data
+    double* outp = REAL(out);
+
+    // Using C std library to copy memory, Arrow may provide better way
+    memcpy(outp, data, n * sizeof(double));
+
+    UNPROTECT(1);
+    return out;
 }
+

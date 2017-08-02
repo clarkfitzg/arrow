@@ -68,3 +68,11 @@ Given an array of doubles in C (no null values), what's the simplest way to make
 `arrow::Array` object from them? The `builder.append()` approach as
 described in the [C++ docs](https://arrow.apache.org/docs/cpp/index.html)
 seems more appropriate if we don't know the initial size of the array.
+
+------------------------------------------------------------
+
+Where is the `Int64Array` defined as used in the line:
+
+```
+std::shared_ptr<Int64Array> int64_array = std::static_pointer_cast<Int64Array>(array);
+```
