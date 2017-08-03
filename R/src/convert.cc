@@ -2,6 +2,10 @@
 
 #include "Rarrow.h"
 
+// From Rdefines - Got to be a better way
+#undef length
+
+
 
 /* Example from Rrawpoppler
  *
@@ -26,7 +30,7 @@ SEXP R_double_to_arrow(SEXP x)
 
     // C pointers to the actual data
     double *xr = REAL(x);
-    int n = length(x);
+    int n = Rf_length(x);
 
     // Following "Getting started"
     arrow::DoubleBuilder builder(arrow::default_memory_pool(), arrow::float64());
@@ -63,8 +67,7 @@ SEXP R_arrow_to_double(SEXP x)
 	// Get the pointer to the actual data
 	const double* data = arr->raw_values();
 
-    // TODO: Call arrow method
-    int n = 3;
+    int n = arr->length();
 
     SEXP out = PROTECT(allocVector(REALSXP, n));
 
