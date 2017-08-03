@@ -1,3 +1,63 @@
+## Debugging
+
+```
+
+R -d lldb
+
+b R_arrow_to_double
+
+b R_double_to_arrow
+
+r
+
+library(Rarrow)
+
+x = rnorm(3)
+
+xa = double_to_arrow(x)
+
+# This is at 
+# Slot "ref":
+# <pointer: 0x7fffffffbe20>
+xa
+```
+
+
+```
+
+x2 = arrow_to_double(xa)
+
+(lldb) print array
+(std::shared_ptr<arrow::Array> *) $1 = 0x00007fffffffbe20
+(lldb) print *array
+(std::shared_ptr<arrow::Array>) $2 = {
+  std::__shared_ptr<arrow::Array, __gnu_cxx::_Lock_policy> = {
+    _M_ptr = 0x0000000000000000
+    _M_refcount = {
+      _M_pi = 0x0000000002429a90
+    }
+  }
+}
+```
+
+This shows that the internal pointer is to memory address 0x0, which seems
+suspicious. What was it for the original array?
+
+```
+
+(lldb) print array
+(std::shared_ptr<arrow::Array>) $2 = {
+  std::__shared_ptr<arrow::Array, __gnu_cxx::_Lock_policy> = {
+    _M_ptr = 0x0000000001ccd0c0
+    _M_refcount = {
+      _M_pi = 0x0000000001ccd0b0
+    }
+  }
+}
+
+
+```
+
 
 ## Open C++ Questions
 
