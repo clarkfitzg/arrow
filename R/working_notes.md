@@ -1,5 +1,11 @@
 ## Debugging
 
+Summary:
+
+It seems that the shared pointer, when I look inside it, has the value
+`_M_ptr = 0x0000000000000000` inside the C code when calling
+`arrow_to_double()`, when it had a different value when it was created with `double_to_arrow`.
+
 ```
 
 R -d lldb
