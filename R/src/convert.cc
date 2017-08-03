@@ -23,6 +23,9 @@ SEXP R_Catalog_getPage(SEXP r_tthis, SEXP r_i)
 }
 */
 
+// Just trying to get it to work
+//DoubleArray* arr;
+
 
 extern "C"
 SEXP R_double_to_arrow(SEXP x)
@@ -34,13 +37,32 @@ SEXP R_double_to_arrow(SEXP x)
     int n = Rf_length(x);
 
     // Wes' code
+    //
+    // Declare a new shared_ptr to a MutableBuffer
     std::shared_ptr<MutableBuffer> data_buf;
+    // Allocate buffer, maintaining 64 byte padding
     AllocateBuffer(default_memory_pool(), n * sizeof(double), &data_buf);
+    // Physically copy the data
     memcpy(data_buf->mutable_data(), xr, n * sizeof(double));
-    std::shared_ptr<DoubleArray> arr = std::make_shared<DoubleArray>(n, data_buf);
+
+    //std::shared_ptr<DoubleArray> arr = std::make_shared<DoubleArray>(n, data_buf);
+    // Should be equivalent
+    //std::shared_ptr<DoubleArray> arr(new DoubleArray(n, data_buf));
+    
+    DoubleArray* arr;
+    // TODO: Not deleted => leaks memory
+    arr = new DoubleArray(n, data_buf);
+    
+    //arr.reset(new DoubleArray(n, data_buf));
 
     // TODO: Pass destructor for array?
-    SEXP r_ans = R_createRef(&arr, "arrow.array", NULL);
+    SEXP r_ans = R_createRef(arr, "arrow.array", NULL);
+    // arr.get() returns the address for the DoubleArray. Then this
+    // pointer should become invalid because when arr goes out of scope the
+    // DoubleArray inside should be deleted
+    //
+    // I think what we really need is to be able to pass a shared_ptr into
+    // R_createRef here
     return(r_ans);
 }
 
