@@ -28,6 +28,8 @@ xa = double_to_arrow(x)
 xa
 ```
 
+Next: compile without any optimization so I can better debug.
+
 
 ```
 
