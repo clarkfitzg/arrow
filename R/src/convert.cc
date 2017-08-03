@@ -5,6 +5,7 @@
 // From Rdefines - Got to be a better way
 #undef length
 
+using namespace arrow;
 
 
 /* Example from Rrawpoppler
@@ -32,18 +33,14 @@ SEXP R_double_to_arrow(SEXP x)
     double *xr = REAL(x);
     int n = Rf_length(x);
 
-    // Following "Getting started"
-    arrow::DoubleBuilder builder(arrow::default_memory_pool(), arrow::float64());
-
-    for (int i = 0; i < n; ++i) {
-        builder.Append(xr[i]);
-    }
-
-    std::shared_ptr<arrow::Array> array;
-    builder.Finish(&array);
+    // Wes' code
+    std::shared_ptr<MutableBuffer> data_buf;
+    AllocateBuffer(default_memory_pool(), n * sizeof(double), &data_buf);
+    memcpy(data_buf->mutable_data(), xr, n * sizeof(double));
+    auto arr = std::make_shared<DoubleArray>(n, data_buf);
 
     // TODO: Pass destructor for array?
-    SEXP r_ans = R_createRef(&array, "arrow.array", NULL);
+    SEXP r_ans = R_createRef(&arr, "arrow.array", NULL);
     return(r_ans);
 }
 
@@ -53,21 +50,21 @@ extern "C"
 SEXP R_arrow_to_double(SEXP x)
 {
     // Follow the pointer in the R object to the C object
-    std::shared_ptr<arrow::Array>* array = GET_REF(x, std::shared_ptr<arrow::Array>);
+    std::shared_ptr<DoubleArray>* array = GET_REF(x, std::shared_ptr<DoubleArray>);
 
     // Following "Getting started"
 	// Cast the Array to its actual type to access its data
     // Running R through the C debugger this line causes a seg fault:
     // stop reason = signal SIGSEGV: invalid address (fault address: 0xa)
-	std::shared_ptr<arrow::DoubleArray> arr = std::static_pointer_cast<arrow::DoubleArray>(*array);
+	//std::shared_ptr<arrow::DoubleArray> arr = std::static_pointer_cast<arrow::DoubleArray>(*array);
 
 	// Get the pointer to the null bitmap.
 	//const uint8_t* null_bitmap = int64_array->null_bitmap_data();
 
 	// Get the pointer to the actual data
-	const double* data = arr->raw_values();
+	const double* data = (*array)->raw_values();
 
-    int n = arr->length();
+    int n = (*array)->length();
 
     SEXP out = PROTECT(allocVector(REALSXP, n));
 
